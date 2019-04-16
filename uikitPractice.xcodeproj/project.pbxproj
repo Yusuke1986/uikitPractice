@@ -7,14 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E60EF166226284E7000F209A /* EmptyStateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60EF165226284E7000F209A /* EmptyStateViewController.swift */; };
 		E62B613022627A2900050160 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62B612F22627A2900050160 /* AppDelegate.swift */; };
 		E62B613222627A2900050160 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62B613122627A2900050160 /* ViewController.swift */; };
 		E62B613722627A2A00050160 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E62B613622627A2A00050160 /* Assets.xcassets */; };
 		E62B613A22627A2A00050160 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E62B613822627A2A00050160 /* LaunchScreen.storyboard */; };
 		E62B614522627A2A00050160 /* uikitPracticeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62B614422627A2A00050160 /* uikitPracticeTests.swift */; };
 		E62B615022627A2A00050160 /* uikitPracticeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62B614F22627A2A00050160 /* uikitPracticeUITests.swift */; };
-		E6EB606B226362650074683D /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EB606A226362650074683D /* AddViewController.swift */; };
+		E6EB606B226362650074683D /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EB606A226362650074683D /* FormViewController.swift */; };
 		E6EB606D226389AB0074683D /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EB606C226389AB0074683D /* ToDoListViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -36,7 +35,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E60EF165226284E7000F209A /* EmptyStateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateViewController.swift; sourceTree = "<group>"; };
 		E62B612C22627A2900050160 /* uikitPractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = uikitPractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E62B612F22627A2900050160 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E62B613122627A2900050160 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -49,7 +47,7 @@
 		E62B614B22627A2A00050160 /* uikitPracticeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = uikitPracticeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E62B614F22627A2A00050160 /* uikitPracticeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = uikitPracticeUITests.swift; sourceTree = "<group>"; };
 		E62B615122627A2A00050160 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E6EB606A226362650074683D /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
+		E6EB606A226362650074683D /* FormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		E6EB606C226389AB0074683D /* ToDoListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -106,8 +104,7 @@
 				E62B613622627A2A00050160 /* Assets.xcassets */,
 				E62B613822627A2A00050160 /* LaunchScreen.storyboard */,
 				E62B613B22627A2A00050160 /* Info.plist */,
-				E60EF165226284E7000F209A /* EmptyStateViewController.swift */,
-				E6EB606A226362650074683D /* AddViewController.swift */,
+				E6EB606A226362650074683D /* FormViewController.swift */,
 				E6EB606C226389AB0074683D /* ToDoListViewController.swift */,
 			);
 			path = uikitPractice;
@@ -262,8 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E62B613222627A2900050160 /* ViewController.swift in Sources */,
-				E60EF166226284E7000F209A /* EmptyStateViewController.swift in Sources */,
-				E6EB606B226362650074683D /* AddViewController.swift in Sources */,
+				E6EB606B226362650074683D /* FormViewController.swift in Sources */,
 				E6EB606D226389AB0074683D /* ToDoListViewController.swift in Sources */,
 				E62B613022627A2900050160 /* AppDelegate.swift in Sources */,
 			);

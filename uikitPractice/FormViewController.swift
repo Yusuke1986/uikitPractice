@@ -8,9 +8,9 @@
 
 import UIKit
 
-class AddViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class FormViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
-    var navBar: UINavigationBar = UINavigationBar();
+    var navBar: UINavigationBar = UINavigationBar()
     var labelTitle = UILabel()
     var labelDesc = UILabel()
     var labelStatus = UILabel()
@@ -18,13 +18,22 @@ class AddViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     var textTitle = UITextField()
     var textDesc = UITextView()
     var statusPicker = UIPickerView()
+    var removeBtn = UIButton()
     
-    let statusList = ["Waiting","Workign","Completed"]
+    var toDo:ToDo = ToDo()
+    var parentController: ToDoListViewController? = nil
+    
+    
+    let statusList = ["Open","Close"]
+    
+    func passController(toDo: ToDo, parentController: ToDoListViewController) {
+        self.toDo = toDo
+        self.parentController = parentController
+    }
     
     override func loadView() {
         view = UIView()
         view.backgroundColor = .white
-        
         
         labelTitle.text = "Title"
         labelTitle.font = UIFont.systemFont(ofSize: 20)
@@ -32,7 +41,6 @@ class AddViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         labelDesc.font = UIFont.systemFont(ofSize: 20)
         labelDesc.numberOfLines = 0
         labelStatus.text = "Status"
-        
         
         // 枠線のスタイルを設定
         textTitle.borderStyle = .roundedRect
@@ -48,7 +56,7 @@ class AddViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         
         let navItem: UINavigationItem = UINavigationItem(title: "Add")
         
-        navItem.rightBarButtonItem = UIBarButtonItem(title: "OK", style: .plain, target: self, action: #selector(self.updateList))
+        navItem.rightBarButtonItem = UIBarButtonItem(title: "SAVE", style: .plain, target: self, action: #selector(self.updateList))
         
         navItem.leftBarButtonItem = UIBarButtonItem(title: "BACK", style: .plain, target: self, action: #selector(self.returnView))
         
@@ -60,6 +68,26 @@ class AddViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         // はじめに表示する項目を指定
         statusPicker.selectRow(1, inComponent: 0, animated: true)
 
+        
+        removeBtn.backgroundColor = .red
+        removeBtn.setTitle("REMOVE", for: .normal)
+        removeBtn.setTitleColor(.white, for: .normal)
+        
+        //constraints
+        loadConstraints()
+        
+        view.addSubview(navBar)
+        view.addSubview(labelTitle)
+        view.addSubview(labelDesc)
+        view.addSubview(labelStatus)
+        view.addSubview(textTitle)
+        view.addSubview(textDesc)
+        view.addSubview(statusPicker)
+        view.addSubview(removeBtn)
+        
+    }
+    
+    func loadConstraints() {
         
         navBar.translatesAutoresizingMaskIntoConstraints = false
         view.addConstraints([
@@ -110,15 +138,13 @@ class AddViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
             statusPicker.heightAnchor.constraint(equalToConstant: 80)
             ])
         
-        
-        view.addSubview(navBar)
-        view.addSubview(labelTitle)
-        view.addSubview(labelDesc)
-        view.addSubview(labelStatus)
-        view.addSubview(textTitle)
-        view.addSubview(textDesc)
-        view.addSubview(statusPicker)
-        
+        removeBtn.translatesAutoresizingMaskIntoConstraints = false
+        view.addConstraints([
+            removeBtn.topAnchor.constraint(equalTo: statusPicker.bottomAnchor, constant: 20.0),
+            removeBtn.leadingAnchor.constraint(equalTo: statusPicker.leadingAnchor),
+            removeBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10.0),
+            removeBtn.heightAnchor.constraint(equalToConstant: 60)
+            ])
     }
     
     
@@ -127,7 +153,16 @@ class AddViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     }
     
     @objc func updateList() {
+        let rowIndex = statusPicker.selectedRow(inComponent: 0)
+        let rowValue = statusList[rowIndex]
         
+        self.toDo.id = UUID().uuidString
+        self.toDo.title = textTitle.text!
+        self.toDo.description = textDesc.text
+        self.toDo.status = rowValue == "Open" ?.open:.close
+        self.parentController?.items.append(self.toDo)
+        
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func returnView() {
