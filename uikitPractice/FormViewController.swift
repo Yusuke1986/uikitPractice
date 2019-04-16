@@ -11,22 +11,24 @@ import UIKit
 class FormViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
     var navBar: UINavigationBar = UINavigationBar()
+    
     var labelTitle = UILabel()
     var labelDesc = UILabel()
     var labelStatus = UILabel()
-//
+
     var textTitle = UITextField()
     var textDesc = UITextView()
+    
     var statusPicker = UIPickerView()
     var removeBtn = UIButton()
     
     var toDo:ToDo = ToDo()
     var parentController: ToDoListViewController? = nil
     
-    
     let statusList = ["Open","Close"]
     
-    func passController(toDo: ToDo, parentController: ToDoListViewController) {
+    //esta funcion recibe la configuracion que va a ser usada por el form para dibujarse correctamente
+    func setupController(toDo: ToDo, parentController: ToDoListViewController) {
         self.toDo = toDo
         self.parentController = parentController
     }
@@ -36,23 +38,25 @@ class FormViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         view.backgroundColor = .white
         
         labelTitle.text = "Title"
-        labelTitle.font = UIFont.systemFont(ofSize: 20)
+        labelTitle.font = UIFont.systemFont(ofSize: 24)
         labelDesc.text = "Description"
-        labelDesc.font = UIFont.systemFont(ofSize: 20)
-        labelDesc.numberOfLines = 0
+        labelDesc.font = UIFont.systemFont(ofSize: 24)
         labelStatus.text = "Status"
-        
-        // 枠線のスタイルを設定
+        labelStatus.font = UIFont.systemFont(ofSize: 24)
+
         textTitle.borderStyle = .roundedRect
-    
+        
+        textTitle.text = toDo.title
+        textDesc.text = toDo.description
+        statusPicker.selectRow(toDo.status == .open ? 0: 1 , inComponent: 0, animated: false)
+        
         textDesc.layer.borderColor = UIColor.gray.cgColor
         textDesc.layer.borderWidth = 0.25
         textDesc.layer.cornerRadius = 10.0
         textDesc.layer.masksToBounds = true
         
-        //全消去ボタンの設定
         textTitle.clearButtonMode = .always
-//        textDesc.clearButtonMode = .always
+        //textDesc.clearButtonMode = .always
         
         let navItem: UINavigationItem = UINavigationItem(title: "Add")
         
@@ -62,16 +66,24 @@ class FormViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         
         navBar.pushItem(navItem, animated: false)
         
-        // プロトコルの設定
         statusPicker.delegate = self
         statusPicker.dataSource = self
-        // はじめに表示する項目を指定
+        
+        // Initial display item specification
         statusPicker.selectRow(1, inComponent: 0, animated: true)
 
-        
         removeBtn.backgroundColor = .red
         removeBtn.setTitle("REMOVE", for: .normal)
         removeBtn.setTitleColor(.white, for: .normal)
+        removeBtn.addTarget(self, action: #selector(pushremoveBtn), for: .touchUpInside)
+        
+        let isNew = toDo.id == ""
+        
+        if isNew {
+            removeBtn.isHidden = true
+        } else {
+            removeBtn.isHidden = false
+        }
         
         //constraints
         loadConstraints()
@@ -84,7 +96,6 @@ class FormViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         view.addSubview(textDesc)
         view.addSubview(statusPicker)
         view.addSubview(removeBtn)
-        
     }
     
     func loadConstraints() {
@@ -147,42 +158,87 @@ class FormViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
             ])
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     @objc func updateList() {
-        let rowIndex = statusPicker.selectedRow(inComponent: 0)
-        let rowValue = statusList[rowIndex]
         
-        self.toDo.id = UUID().uuidString
-        self.toDo.title = textTitle.text!
-        self.toDo.description = textDesc.text
-        self.toDo.status = rowValue == "Open" ?.open:.close
-        self.parentController?.items.append(self.toDo)
-        
-        self.dismiss(animated: true, completion: nil)
+        if textTitle.text!.isEmpty {
+            
+            let alert = UIAlertController(title: "Error", message: "Enter the Title", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(okAction)
+            
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+        else {
+            
+            let rowIndex = statusPicker.selectedRow(inComponent: 0)
+            let rowValue = statusList[rowIndex]
+            
+            //si no tiene id es nuevo
+            let isNew = toDo.id == ""
+            
+            //si es nuevo se asigna un nuevo UUID
+            if isNew {
+                self.toDo.id = UUID().uuidString
+            }
+            
+            self.toDo.title = textTitle.text!
+            self.toDo.description = textDesc.text
+            self.toDo.status = rowValue == "Open" ?.open:.close
+            
+            //si es nuevo hay que agregar a la lista
+            if isNew {
+                self.parentController?.items.append(self.toDo)
+            }
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func returnView() {
         
+        self.dismiss(animated: true, completion: nil)
     }
     
+    @objc func pushremoveBtn(sender: UIButton){
+
+        let alert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete?", preferredStyle: .alert)
+        
+        let actionOK = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {
+            (action: UIAlertAction!) in
+            
+            let index = self.toDo.index
+            self.parentController?.items.remove(at: index)
+            self.dismiss(animated: true, completion: nil)
+        })
+        
+        let actionCancel = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: {
+            (action: UIAlertAction!) in
+            
+        })
+        
+        alert.addAction(actionOK)
+        alert.addAction(actionCancel)
+        
+        self.present(alert, animated: true, completion: nil)
+    }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    // アイテム表示個数を返す
+
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return statusList.count
     }
-    // 表示する文字列を返す
+
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         return statusList[row]
     }
-    // 選択時の処理
+    // selected pickerview
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         print(statusList[row])
     }
@@ -195,7 +251,4 @@ class FormViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         // Pass the selected object to the new view controller.
     }
     */
-    
-    
-
 }

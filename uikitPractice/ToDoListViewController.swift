@@ -18,12 +18,14 @@ class ToDo {
     var description: String
     var status: ToDoStatus
     var id: String
+    var index: Int
     
     init() {
         self.title = ""
         self.description = ""
         self.status = .open
         self.id = ""
+        self.index = 0
     }
     
     init(title: String) {
@@ -31,6 +33,7 @@ class ToDo {
         self.description = ""
         self.status = .open
         self.id = ""
+        self.index = 0
     }
 }
 
@@ -107,7 +110,6 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         TO DO
         """, tableView: self.tableView!)
             return 0
-
         }
     }
     
@@ -116,23 +118,41 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
-            ?? UITableViewCell(style: .default, reuseIdentifier: "Cell")
+
+        let cell = UITableViewCell(style: UITableViewCell.CellStyle.value1,
+                                   reuseIdentifier: "aaa\(indexPath.section)-\(indexPath.row)")
         
         cell.textLabel?.text = self.items[indexPath.row].title
+        cell.detailTextLabel?.text = self.items[indexPath.row].description
+        
+        if self.items[indexPath.row].status == ToDoStatus.open {
+            cell.imageView?.image = UIImage(named: "open")
+        } else {
+            cell.imageView?.image = UIImage(named: "close")
+        }
+        
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Selected! \(self.items[indexPath.row])")
+        
+        let nextvc = FormViewController()
+        self.items[indexPath.row].index = indexPath.row
+        
+        //obtenemos toDo usando indexRow de la tabla
+        //items ya tiene los datos de la tabla y indexPath.row significa "selectedRow"
+        let toDo = self.items[indexPath.row]
+        
+        nextvc.setupController(toDo: toDo, parentController: self)
+        
+        self.present(nextvc, animated: true, completion: nil)
     }
     
     
     @objc func add() {
         let nextvc = FormViewController()
-        
-        nextvc.passController(toDo: ToDo(), parentController: self)
+        nextvc.setupController(toDo: ToDo(), parentController: self)
         
         self.present(nextvc, animated: true, completion: nil)
     }
